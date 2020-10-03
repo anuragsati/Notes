@@ -1,4 +1,231 @@
+***
+### For input ouptup in files use : 
 
+```c++
+    freopen("input.txt", "rt", stdin);
+    freopen("output.txt", "wt", stdout);
+```
+
+***
+### Pro tip:  sieve always works for precomputation
+
+***
+### LCM always exits
+
+
+***
+### properties of first n natural numbers
+
+first N natural numbers can be divided into 2 groups such that their sum is 0 or 1
+
+***
+### solve a^b mod (p)
+
+this can be solve using euler phi function replace every b by `b mod phi(p)`
+`only when a is coprime with p`
+
+[like this div2 B](https://codeforces.com/blog/entry/13336)
+
+***
+### check if number is divisible by 4
+    we just need to check if last 2 digits are divisible
+
+***
+### Display conseccutive characters like this
+
+```c++
+    cout << "YES\n" << s[i] << s[j] << s[k]
+```
+
+not like `cout << s[i]+s[j]+s[k]` this adds them
+
+***
+## GCD archives
+
+-    Gcd of numbers remain same if larger number is replaced with diff b/w large and small
+
+***
+### Finding numerator and denominator from a decimal value
+
+```c++
+    void decimalToFraction(double number) 
+    { 
+        // Fetch integral value of the decimal 
+        double intVal = floor(number); 
+    
+        // Fetch fractional part of the decimal 
+        double fVal = number - intVal; 
+    
+        // Consider precision value to 
+        // convert fractional part to 
+        // integral equivalent 
+        const long pVal = 1000000000; 
+    
+        // Calculate GCD of integral 
+        // equivalent of fractional 
+        // part and precision value 
+        long long gcdVal = gcd(round(fVal * pVal), pVal); 
+    
+        // Calculate num and deno 
+        long long num = round(fVal * pVal) / gcdVal; 
+        long long deno = pVal / gcdVal; 
+    
+        // Print the fraction 
+        cout << (intVal * deno) + num 
+            << "/" << deno << endl; 
+    } 
+
+```
+
+
+
+***
+
+### Prime factors  (sqrt(n))
+
+Can be done in log(n)
+
+
+```c++
+
+    void primeFactors(int n) 
+    { 
+        // Print the number of 2s that divide n 
+            while (n%2 == 0) 
+            { 
+                printf("%d ", 2); 
+                n = n/2; 
+            } 
+    
+        // n must be odd at this point.  So we can skip one element
+        
+            for (int i = 3; i <= sqrt(n); i = i+2) 
+            { 
+                // While i divides n, print i and divide n 
+                while (n%i == 0) 
+                { 
+                    printf("%d ", i); 
+                    n = n/i; 
+                } 
+            } 
+    
+        // This condition is to handle the case when n  
+        // is a prime number greater than 2 
+            if (n > 2) 
+                printf ("%d ", n); 
+    }
+
+
+```
+
+***
+
+
+### To flip states of a number every time we loop through it
+
+```c++
+
+    int p = 0;      // initial value
+
+    while(1){
+        p = 1-p;    //change
+    }
+
+```
+    
+**OR**
+
+```c++
+
+    int x = 0;
+    (x == 0) ? +1 : -1;
+
+```
+
+
+***
+
+
+
+### Check for power of 2
+
+if x is isPowerOfTwo then it has only one 1 in its binary form
+and x-1 will have all 1's right of the zero
+so (x & x-1) will be zero if x isPowerOfTwo
+            
+```c++
+
+    bool isPowerOfTwo(int x) 
+    { 
+        // First x in the below expression is 
+        // for  the case when x is 0  
+        
+        return x && (!(x & (x - 1))); 
+    } 
+```
+
+
+***
+
+
+
+### Convert binary to int
+
+```c++
+    auto n = 100010101;
+    cout << n;
+```
+
+
+
+***
+
+### Stars and Bars technique
+
+Used to find out how many solutions does this eqn `a+b+c = n` have
+
+>ans-----------------
+
+***
+
+
+### Pseudo sieve
+
+This prints increasing numbers where each number is not divisor of all its previous numbers.
+This can be done with modified sieve.
+If number has no divisors till now insert it into ans and mark all its multiple false.
+
+
+```c++
+
+    const int imax = 2000000;
+    vector<bool> mark(imax, true);
+
+    void sieve(int &n){
+        vector<int> ans;
+        mark[0]=false;
+        mark[1]=false;
+
+        for(int i=3; i<=imax; ++i){             //this is O(n)
+            if(mark[i]){
+                ans.push_back(i);
+                for(int j=i+i; j<=imax; j+=i){          //i+i for next
+                    mark[j] = false;
+                }
+            }
+        }
+
+        for(int i=0; i<n; ++i)
+            cout << ans[i] << " ";
+    }
+
+    int main(){
+        int n;
+        cin >> n;
+        sieve(n);
+    }
+
+```
 
 ***
 
@@ -667,7 +894,7 @@ using recursion or DP
 
 ***
 
-## Fast Modular multiplication
+## Fast Modular exponentiation
 
 a^b so we only count active bits of b
 next bit number is square of prev. number
