@@ -1,4 +1,153 @@
 ***
+### Upper bound 
+gives next strictly greatest element 
+
+```c++
+    upper_bound(all(a), x);
+```
+
+
+***
+### Iterating a vector of tuple
+- get elements of tuple using : `get<0>(tuple[i])`
+
+```c++
+    for(int i=0; i<(int)fans.size(); ++i)
+            cout << get<0>(fans[i]) << " " << get<1>(fans[i]) << " " << get<2>(fans[i]) << endl;
+    }
+```
+
+***
+### Shifts
+    First of all, a left cyclic shift is the same as 𝑛−1 right cyclic shifts and vice versa
+
+
+***
+### To clear set and add something    
+```c++
+    set<int> s{2,4,45}  //insert like this
+    s = {3,4}           //clear the set and insert this
+```
+
+
+***
+### check in how many moves you can make number ex. (1,2,5)
+
+```c++
+    // n = number you want to make by using 1, 2, 5 repetidly
+    ans += (n/5) + (n%5)/2 + (n%5%2);
+```
+***
+
+### Balance string : max. substring such that no. of zero = no. of ones
+
+Let cnt0(i) be the number of zeroes and cnt1(i) — the number of ones on prefix of length i; also let balance(i) = cnt0(i) - cnt1(i) (i ≥ 0). The interesting property of balance is that the **substring [x, y] is balanced iff balance(y) = balance(x - 1).** That leads to a solution: for each value of balance maintain the minimum i where this balance is obtained (let it be called minIndex), and for each index i in the string update answer with i - minIndex(balance(i)).
+***
+
+### Properties of coprime numbers
+- 1 is co-prime with every number.
+- Any two prime numbers are co-prime to each other: As every prime number has only two factors 1 and the number itself, the only common factor of two prime numbers will be 1. For example, 2 and 3 are two prime numbers. Factors of 2 are 1, 2, and factors of 3 are 1, 3. The only common factor is 1 and hence they are co-prime.
+- **imp** Any two successive numbers/ integers are always co-prime: Take any consecutive numbers such as 2, 3, or 3, 4 or 5, 6, and so on; they have 1 as their HCF.
+- The sum of any two co-prime numbers are always co-prime with their product: 2 and 3 are co-prime and have 5 as their sum (2+3) and 6 as the product (2×3). Hence, 5 and 6 are co-prime to each other.
+- Two even numbers can never form a coprime pair as all the even numbers have a common factor as 2.
+- If two numbers have their unit digits as 0 and 5, then they are not coprime to each other. For example 10 and 15 are not coprime since their HCF is 5 (or divisible by 5).
+
+***
+***
+## BITMASKING TRICKS
+
+### To flip bits and find number
+
+1. Builtin ~ operator
+```c++
+    return (unsigned)(~x); //unsigned so that no. will be +
+```
+
+2. Xor with number also returns flipped bits
+```c++
+    ll z = (1LL << 32)-1;  // make all 1 (32 is the length of no. we want)
+
+    
+```
+
+### Relation between sum, xor, and
+```c++
+    sum(a, b) = xor(a, b) + 2 * and(a, b)   // solve like normal maths eqn
+```
+
+### Remove last set bit
+```c++
+    n & (n-1)
+```
+
+### Find max. set Bit
+```c++
+    int k = (int)(log2(n) + 1);  // +1 because it will give exact bit position of set bit 
+    // ex - in 18, without 1 will give 3 but with 1 will give 4 which is position of set bit
+```
+
+### Calculating Max Xor pair between L and R
+
+To maximize A xor B, we want A and B to differ as much as possible at every bit index.
+
+We first find the most significant bit that we can force to differ by looking at L and R.
+
+For all of the lesser significant bits in A and B, we can always ensure that they differ and still have L <= A <= B <= R.
+
+Our final answer will be the number represented by all 1s starting from the most significant bit that differs between A and B
+
+**steps**
+- Find A ^ B    
+- Find msb position in A ^ B  ie log2(a^b)+1
+- power of 2 it and subtract 1 to get ans    
+- subtract 1 bcs `1111` are always 2^n-1
+
+***
+### Count total no. of xor pairs in array
+
+**imp : `a[i] ^ a[j] = x`  happens if `a[i] ^ x = a[j]`**
+
+- we will use map to store result and for every i we find how many j are there
+- overall o(n)
+
+- find all pairs then `ans/2` if `i<j` is there
+
+***
+***
+**imp**
+### Testing if we can select subset of [1,2,3,....x] totalling N
+
+**it is always possible if sum of 1..x is N or above**
+- let Y be number such that it is barely above N
+    (1...Y-1) < N < (1...Y)
+
+- Now (1...y) and N differs less than Y
+    0 < (1...Y)-N < Y
+
+- we can select atmost 1 integer from 1...Y and remove it to make sum N
+
+***
+### We can iterate a set using iterators
+
+***
+### Find something exist in a map
+
+```c++
+    if(m.find(x) != m.end()){
+        //found
+    }
+```
+
+If you want to find a key that does not exist in another map
+
+```c++
+    for(auto x:m1)
+        if(m2.find(x.first) == m2.end())
+            ans = x.first;      //this key will not be present in m2
+```
+
+
+***
 ### For input ouptup in files use : 
 
 ```c++
@@ -1026,7 +1175,7 @@ max similarly
 ### Rounding up
 
 In general, for positive integers x and y, 
-rounding up x/y is implemented as **`(x + y − 1)/y`**
+rounding up `x/y` is implemented as **`(x + y − 1)/y`**
 
 rounding up 2 ====>   **`(n + 1) / 2`**
 
