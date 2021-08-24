@@ -1,4 +1,424 @@
 ***
+### std::erase(iterator + x) to delete from vector or string in O(N) time
+
+
+***
+### Last digit repeat in cycles of 4 in a^b
+ex: n=3
+	3
+	9
+	27
+	81
+
+	343
+	...
+
+***
+### AND
+	whenever we have to minimise and& we take more ands bcz and doesnot increase when taken with others
+	oppsite with OR (|)
+***
+### check for perfect square
+
+	ll sr = sqrt(c);
+	if(sr*sr == c){
+		ans += c;
+
+***
+### sometimes to save sapace for array we can use 1st row/col of a matrix
+
+
+***
+### We can use counting sort in string & limited size arrays in O(n)
+
+
+***
+### Precompute XOR array
+
+N = 0: 0, 0             N = 1: 1, 1             N = 2: 3, 3
+N = 3: 0, 0             N = 4: 4, 4             N = 5: 1, 1
+N = 6: 7, 7             N = 7: 0, 0             N = 8: 8, 8
+N = 9: 1, 1             N = 10: 11, 11          N = 11: 0, 0
+N = 12: 12, 12          N = 13: 1, 1            N = 14: 15, 15
+N = 15: 0, 0            N = 16: 16, 16          N = 17: 1, 1
+N = 18: 19, 19          N = 19: 0, 0            N = 20: 20, 20
+N = 21: 1, 1            N = 22: 23, 23          N = 23: 0, 0
+N = 24: 24, 24          N = 25: 1, 1            N = 26: 27, 27
+N = 27: 0, 0            N = 28: 28, 28          N = 29: 1, 1
+N = 30: 31, 31          N = 31: 0, 0            N = 32: 32, 32
+N = 33: 1, 1            N = 34: 35, 35          N = 35: 0, 0
+N = 36: 36, 36          N = 37: 1, 1            N = 38: 39, 39
+N = 39: 0, 0            N = 40: 40, 40          N = 41: 1, 1
+N = 42: 43, 43          N = 43: 0, 0            N = 44: 44, 44
+N = 45: 1, 1            N = 46: 47, 47          N = 47: 0, 0
+N = 48: 48, 48          N = 49: 1, 1            N = 50: 51, 51
+
+```c++
+	Also there is a formula for prefix xors `0 ^ 1 ^ .... ^ k`
+
+	int xorUpToK(int k) {
+		switch (k % 4) {
+			case 0: return k;
+			case 1: return 1;
+			case 2: return k + 1;
+			case 3: return 0;
+		}
+	}
+```
+
+
+***
+### Bob and subarray (https://www.hackerrank.com/contests/codeagon/challenges/bob-and-subarray-or/problem)
+
+here we move from bit to bit and we check how much a single bit is contributing
+
+
+
+
+***
+### __builtin_popcount() = int
+### __builtin_popcountll() = long long
+
+
+***
+### Sometimes you should just consider all small possible answers
+
+
+***
+### push_back() and pop_back() are allowed in strings
+
+
+***
+### unique 
+	removes adjacent duplicate elements
+	return pointer to first non replaced element then we need to resize array according to that
+	1 1 1 1 2 2 3 4 2 2
+	1 2 3 4 2
+
+	auto ip = unique(a.begin(), a.end());
+	a.resize(distance(a.begin(), ip));
+
+
+***
+### +1 if condition satisfied -1 if not 
+
+
+***
+### Job / Activity selection (greedy)
+- first sort according to second element(earliest ending job)
+- first job is always selected
+- move from job 1 to n and if start time of that job is greater than our ending time of prev job then take that job
+
+
+```c++
+	bool cmp(pair<ll, ll> &a, pair<ll, ll> &b){
+		if(a.second == b.second) return a.first < b.first;
+		return a.second < b.second;
+	}
+
+
+	sort(a.begin(), a.end(), cmp);
+	int ans = 1, curr_job=0;
+	for(int j=1; j<n; ++j){
+		if(a[j].first >= a[curr_job].second){
+			++ans;
+			curr_job = j;
+		}
+	}
+
+	cout << ans; //total jobs we can perform
+```
+
+
+***
+### Comparator functin (https://www.youtube.com/watch?v=3pvZhwp0U9w)
+
+
+***
+### Its always better to compute prefix rather than suffix 
+
+***
+### Partition algo
+```c++
+	int partition(int lo, int hi, int pi){
+		int idx = lo;
+
+		for(int i=lo; i<=hi; ++i){
+			if(a[i]] < a[pi]){
+				swap(a[idx], a[i]);
+				idx++;
+			}
+		}
+
+		//finally swap pi(partition index)
+		swap(a[idx], a[hi]);
+
+		return idx;
+	}
+```
+
+
+***
+### no. of subarray sum = k (works for -ve too)
+
+if in array only +ve no. (n>0) are there we can do it with 2 pointers
+ex [1, 2, 3, 4, 5, 6]
+	L  R
+	L will move to decrease sumk
+	R will move to increase sum 
+	if we reach sum we increase both
+
+```c++
+    int subarraySum(vector<int>& nums, int k) {
+		int n = nums.size();
+
+		int pref = 0, ans=0;
+		unordered_map<int, int> m;
+		m[pref]++;  //if [0..a[i]] is sum = k then we need to have one 0 in map
+
+		for(int i=0; i<n; ++i){
+			pref += nums[i];
+			ans += m[pref-k];
+			m[pref]++;
+		}
+
+		return ans;
+    }
+```
+
+***
+In-Place sorting : without using extra space.
+
+***
+### about games (Mostly DP)
+	This is natural in games with scoring: we want to know what the value of each position of the game is.
+
+
+***
+### imp 2^k
+	2^2 + 2^2 = 2^4 (L==M)
+	2^2 + 2^3 != 2^x (L != M)
+
+
+	if 2^L + 2^M 
+	then if L = M means 2^L + 2^M = 2^x
+	but if L != M means 2^L + 2^M != 2^x
+
+
+***
+### Convert string to ll 
+	//atoll convert c type string to ll 
+	// c_str() to convert c++ string to c string
+
+	long long nn = atoll(string.c_str());
+
+***
+### Sort by length first
+
+bool compareLen(const std::string& a, const std::string& b){
+    return (a.size() < b.size()); 
+} 
+
+
+***
+### If a/k and b/k then (a-b)/k
+
+***
+### Bitmasking
+use bitmasking when you have to simulate delete some elements / make subsets
+
+***
+### Prime factors 
+```c++
+    vector<pair<ll, ll> > factor(ll n){
+        vector<pair<ll, ll> > a;
+        for(ll i=2; i*i <= n; ++i){
+            if(n%i==0){
+                ll t=0;
+                while(n%i == 0)
+                    n/=i, ++t;
+                a.push_back({i, t});
+            }
+        }
+        if(n>1) a.push_back({n, 1});
+
+        return a;
+    }
+```
+***
+### Next least integer using lower_bound
+```c++
+    lower_bound(a.rbegin(), a.rend(), x, greater<int> ());
+```
+
+***
+### observe
+    sometimes ans is in binary representation like no. of set bits
+
+***
+### how to divide into segments
+```c++
+    ll s=0, ans=0;
+    for(int i=0; i<n; ++i){
+        ++s;
+        if(s*a[i] >=x){         //if this seg. is complete start a new segment
+            ++ans;
+            s=0;
+        }
+    }
+    cout << ans << endl;
+```
+
+***
+### Number of pairs whose sum is greater than 0 (sum > 0)
+- always use binary search (lower_bound)
+- when will an index start forming + numbers --> -a[i]+1
+- if 2 numbers sum is >0 then atleast one will be >0
+
+```c++
+    sort(all(a));
+    ll ans=0;
+
+    for(int i=0; i<n; ++i){
+        if(a[i]<=0)             //skip -ve and 0
+            continue;
+        
+        ll p = lower_bound(all(a), -a[i]+1)-a.begin();  
+        ans += i-p;
+    }
+    cout << ans;
+```
+
+
+***
+### facts about prime fac
+- prime fac. can be divided into 2 numbers p1*p2 where p1 is prime 
+- prime fac. contains only 2^x as even term rest all are odd
+- in prime fac. if we divide by all odd factors it becomes 2^x
+
+
+***
+## subarray with sum <= t
+
+```c++
+    for(int i=0; i<n; ++i)
+        cin >> a[i];
+    ll sum = 0;
+    ll ans = 0, cnt=0;
+
+    for(int i=0; i<n; ++i){
+        if(sum + a[i] <= t){
+            sum += a[i];
+            ++cnt;
+        }
+        else{
+            sum = sum - a[i-cnt]+a[i];
+        }
+        ans = max(ans, cnt);
+    }
+    cout << ans;
+```
+
+***
+### IMP GCD
+    g = gcd(a, b)
+    If a is multiple of G and b is multiple of G then |a-b| is also multiple of g
+
+***
+### prime factor 
+    If two things are divisible they must be in same prime factor form.
+    ex = a/b .  then prime fac. .  then prime fac. of b must be of form of a and each power has to be less of b must be of form of a and each power has to be less
+
+***
+### factorial 
+
+**𝑛! ends with 0 for any 𝑛>4.**
+
+***
+### nUmber mod
+    If (a1 + a2 )%k==0 then
+    a1%k + a2%k  = k
+
+    i.e if (a1 + a2) is divisible by k then sum of their mods will sum up to k
+
+
+***
+### LCM
+- LCM grows exponentially
+- If n is divisible by all (1...k) means n is divisible by lcm(1, 2...k)
+
+
+***
+### nCr
+Read this [cp-algorthms](https://cp-algorithms.com/combinatorics/binomial-coefficients.html)
+
+
+***
+## DSU
+Learned from codeNcode [here](https://youtu.be/0Ol6hjzh6NA?list=PL2q4fbVm1Ik4JdzE2Bv_UUGBz0TXEIrai)
+**Optimization techniques**
+1. Path compression -> improves find(parent) from o(n) to o(logn)
+2. Union by rank -> impoves union of sets
+
+
+
+### Basic Dsu without optimization
+only parent array is needed which stores where the parent is.
+
+    index : 1 2 3 4 5 6 7 
+    parent: 2 2 3 1 4 2 2       <-  parent of 1,2,6,7 is 2 
+
+```c++
+    int n;
+    vector<int> parent(n);
+    for(int i=0; i<n; i++)      //boilerplate initialization
+        parent[i] = i;
+
+    void join(int a, int b){        // join two sets
+        a = find(a);
+        b = find(b);
+        parent[a] = b;          
+
+        //shorter
+        // parent[find(b)] = find(a);  
+    }
+
+    int find(int a){            //find parent of set
+        if(a == parent[a])
+            return a;
+        else
+            return find(parent[a]); //go to its parent
+    }
+
+    bool check(int a, int b){           // check if both ele. belong to same set
+        return find(a) == find(b); 
+    }
+
+```
+
+### Path compression
+
+compress path so that child points directly to parent. 
+
+```c++
+    find(a){
+        if(parent[a] < 0)   // generally representative's parent is -ve
+            return a;
+        
+        int x = find(parent[a]);
+        parent[a] = x;
+        return x;
+
+        // shorter
+        //return parent[a] = find(parent[a]);
+
+        //even shorter
+        // return a == parent[a] ? a : parent[a] = find(parent[a]);  
+    }
+```
+
+***
+***
 ### Upper bound 
 gives next strictly greatest element 
 
@@ -75,10 +495,24 @@ Let cnt0(i) be the number of zeroes and cnt1(i) — the number of ones on prefix
     sum(a, b) = xor(a, b) + 2 * and(a, b)   // solve like normal maths eqn
 ```
 
-### Remove last set bit
+### Remove last set bit 
 ```c++
     n & (n-1)
 ```
+
+### get last/rightmost set bit 
+& the number with its 2's complement 
+
+```c++
+	x & -x
+	// or
+	x & (~x + 1)
+
+	//finally ans
+	ans &= -ans;
+```
+
+
 
 ### Find max. set Bit
 ```c++
@@ -156,7 +590,15 @@ If you want to find a key that does not exist in another map
 ```
 
 ***
-### Pro tip:  sieve always works for precomputation
+#### Pro tip:  sieve always works for precomputation
+#### Sieve can be used for 10^9 using bool array 
+    i.e we can use bool[100000000] in global
+
+#### To save time in sieve
+```c++
+    for(int i=4; i<=sz; i+=2)
+        mark[i] = false;
+```
 
 ***
 ### LCM always exits
@@ -234,38 +676,23 @@ not like `cout << s[i]+s[j]+s[k]` this adds them
 
 Can be done in log(n)
 
-
 ```c++
-
-    void primeFactors(int n) 
-    { 
-        // Print the number of 2s that divide n 
-            while (n%2 == 0) 
-            { 
-                printf("%d ", 2); 
-                n = n/2; 
-            } 
-    
-        // n must be odd at this point.  So we can skip one element
-        
-            for (int i = 3; i <= sqrt(n); i = i+2) 
-            { 
-                // While i divides n, print i and divide n 
-                while (n%i == 0) 
-                { 
-                    printf("%d ", i); 
-                    n = n/i; 
-                } 
-            } 
-    
-        // This condition is to handle the case when n  
-        // is a prime number greater than 2 
-            if (n > 2) 
-                printf ("%d ", n); 
-    }
-
-
+	vector<pair<int, long long>> val;
+	for (long long i = 2; i * i <= n; ++i) {
+		int cnt = 0;
+		while (n % i == 0) {
+			++cnt;
+			n /= i;
+		}
+		if (cnt > 0) {
+			val.push_back({cnt, i});
+		}
+	}
+	if (n > 1) {
+		val.push_back({1, n});
+	}
 ```
+
 
 ***
 
@@ -355,10 +782,10 @@ If number has no divisors till now insert it into ans and mark all its multiple 
         mark[0]=false;
         mark[1]=false;
 
-        for(int i=3; i<=imax; ++i){             //this is O(n)
+        for(int i=2; i*i<=imax; ++i){             //this is O(root n)
             if(mark[i]){
                 ans.push_back(i);
-                for(int j=i+i; j<=imax; j+=i){          //i+i for next
+                for(int j=i*i; j<=imax; j+=i){          //i+i for next
                     mark[j] = false;
                 }
             }
@@ -810,7 +1237,7 @@ we want a as multiple of b
         
 ***
 
-### Segment sieve
+### Segmented sieve
 
 ```c++
     void segSieve(ll a, ll b){
@@ -830,15 +1257,11 @@ we want a as multiple of b
         vector<bool> isprime(b-a+1, true);      //create bool for seg sieve
             
         for(auto i:primes){
-            ll low = floor(a/i) * i;        //get to nearest divisible point
-            if(low < a)
-                low += i;
-            if(low == i)
-                low += i;
-            
-            for(ll j=low; j<=b; j+=i){
-                isprime[j-a] = false;
-            }
+			ll firstMultiple = ceil(a*1.0 / i);   //get the first multiple of prime i closest to a
+
+			for(int j = max(i*i, firstMultiple*i); j<=b; j+=i){
+				isprime[j-a] = false;
+			}
         }
 
         if(a == 1)                  //when a == 1;
@@ -1062,6 +1485,8 @@ refer cp-algorithms
         return res;
     }
 ```
+
+ex - 2^5 == 2^(101) == 2^4 * 2^1
 
 
 ***
