@@ -1,3 +1,96 @@
+***
+### Topological sorting (Kahn's algo)
+T.C : O(v + e)
+S.C : O(v)
+
+```c++
+	vector<int> adj[n+1];
+	vector<int> ind(n+1);
+
+	for(int i=1; i<=n; ++i){ //calcualte indegree of every node
+		for(auto x:adj[i])
+			ind[x]++;
+	}
+
+	queue<int> q;
+
+	for(int i=1; i<=n; ++i){ //push all nodes with indegree 0 in queue bcz they are starting nodes
+		if(ind[i] == 0)
+			q.push(i);
+	}
+
+	vector<int> toporder;
+
+	while(!q.empty()){
+		int u = q.front();
+		q.pop();
+
+		for(auto x : adj[u]){ //if we are visiting this node then reduce indegree of every child by 1
+			ind[x]--;
+
+			if(ind[x] == 0) //if at some point indegree becomes 0 that means now we can process it so push in queue
+				q.push(x);
+		}
+	}
+
+```
+
+***
+### Parallel BFS
+- when you want to sum bfs from many nodes
+- you can run parallel bfs from many nodes at once if you want nearest something
+- just push all starting nodes in queue first
+
+```c++
+	queue<pair<int, int> > q;
+
+	for(int i=0; i<n; ++i){
+		for(int j=0; j<m; ++j){
+			if(a[i][j] == 0){
+				q.push({i,j});
+			}
+		}
+	}
+```
+
+
+
+***
+### Shortest path from source to all nodes in undirected graph
+- use BFS from source and visit all vertex
+- maintain a distance array that tracks dist. of each node from src node
+
+
+
+***
+### check for a root node in directed graph
+	simply check if a node has indegree 0
+
+
+
+***
+### color tree in 2 colors but if two nodes have same color then dist between them should be even (https://atcoder.jp/contests/abc126/tasks/abc126_d)
+	just color first node ans 1 and then if dist. between any node and this node is even color it the same as 1
+	use dfs (int i, int sum)
+
+
+void dfs(ll i, ll sum){
+	vis[i] = true;
+
+	if(sum & 1) color[i] = 0;
+	else color[i] = 1;
+
+	for(auto x:a[i]){
+		if(!vis[x.first])
+			dfs(x.first, sum + x.second);
+	}
+}
+
+
+
+
+
+
 # GRAPHS    
 ***
 
@@ -62,37 +155,15 @@
 
         vis[v] = 2;             // mark as finished processing
     }
+
+
+
+	//to visit all nodes
+	for(int i=1; i<=n; ++i)
+		if(vis[i] != 2)
+			dfs(i);
 ```
 
-
-***
-## Topological sorting (DAG)
-
-```c++
-    int n; // number of vertices
-    vector<vector<int>> adj; // adjacency list of graph
-    vector<bool> visited;
-    vector<int> ans;
-
-    void dfs(int v) {
-        visited[v] = true;
-        for (int u : adj[v]) {
-            if (!visited[u])
-                dfs(u);
-        }
-        ans.push_back(v);
-    }
-
-    void topological_sort() {
-        visited.assign(n, false);
-        ans.clear();
-        for (int i = 0; i < n; ++i) {
-            if (!visited[i])
-                dfs(i);
-        }
-        reverse(ans.begin(), ans.end());
-    }
-```
 
 ***
 ## Dijkstra (complete with std::set)
@@ -172,6 +243,7 @@
 ***
 ### BFS
 - used to find shortest path in unweighted graph
+- shortest path can also be used like recursive dfs with depth like backtracking
 
 ```c++
     const int sz = (int)2e5+10;
@@ -210,7 +282,7 @@
     vector<int> a[sz];
     vector<bool> vis(sz, false);
 
-    void dfs(int i){
+    void dfs(int i){ //need to make sure starting node is not visited
         vis[i] = true;
         for(auto x:a[i]){
             if(!vis[x])
@@ -218,6 +290,24 @@
         }
     }
 ```
+
+- other way
+```c++
+    const int sz = (int)2e5+10;
+    vector<int> a[sz];
+    vector<bool> vis(sz, false);
+
+    void dfs(int i){
+		if(vis[i] == true)
+			return;
+
+        vis[i] = true;
+        for(auto x:a[i])
+			dfs(x);
+    }
+```
+
+
 
 ***
 ### Level of each node using dfs
@@ -253,18 +343,21 @@ Returns true if contains cycle
     const int sz = 200000;
     vector<int> a[sz];
     vector<int> vis(sz);
+	bool cycle = false;
 
-    bool dfs(int child, int par){
-        vis[child] = 1;
-        for(auto x:a[child]){
-            if(!vis[x]){
-                if(dfs(x,child))    // if dfs return true, return true
-                    return true;
-            }
-            else if(x != par) // if node is vis. and it is not its parent
-                return true;
+    void dfs(int i, int par){
+		if(vis[i] == true){
+			cycle = true;
+			return;
+		}
+
+        vis[i] = 1;
+        for(auto x : a[i]){
+			if(x == par) //don't visit the parent 
+				continue;
+			
+			dfs(x, i); //pass current node as par to other nodes
         }
-        return false;
     }
 
 ```

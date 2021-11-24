@@ -1,3 +1,200 @@
+### Common DP ideas
+
+- 1 : Object choice : 	Knapsack, subset sum
+
+- 2 : Ending form : 	LIS, Pahts on Grid
+
+- 3 : LR form : MCM, palindromic substring
+
+- 4 : Matching form : LCS
+
+
+
+
+
+
+
+### Count number of palindromic substrings  (just like MCM diagonal dp)
+[https://www.youtube.com/watch?v=XmSOWnL6T_I&t=162s]
+
+like this
+T T T T T
+* T T T T
+* * T F T
+* * * T T
+* * * * T
+
+dp[i][j] = represents we are considering substring from i to j
+substring will be palindromic if both ends are same and in middle is also same i.e s[i] == s[j] and dp[i+1][j-1] is true
+
+```c++
+    int countSubstrings(string s) {
+		int n = s.size();
+		bool dp[n][n];
+		int ans = 0;
+
+		for(int gap=0; gap<n; ++gap){
+			for(int i=0, j=gap; j<n; ++i, ++j){
+				if(gap==0){
+					dp[i][j] = true;
+				}
+				else if(gap==1){
+					if(s[i]==s[j]) dp[i][j] = true;
+					else dp[i][j] = false;
+				}
+				else{
+					if(s[i]==s[j] && dp[i+1][j-1]==true)
+						dp[i][j] = true;	
+					else
+						dp[i][j] = false;
+				}
+
+				if(dp[i][j]) ++ans;
+			}
+		}
+
+		return ans;
+};
+```
+
+- Printing LPS
+	we find longest palindromic substring as gap bcz gap is increasing and we store start and end of that pair
+
+
+```c++
+		int mx = 0;
+		pair<int, int> ans;
+
+		for(int gap=0; gap < n; ++gap){
+			for(int i=0, j=gap; j<n; ++i, ++j){
+				if(gap==0)
+					dp[i][j] = true;
+				else if(gap==1){
+					if(s[i]==s[j]) dp[i][j] = true;
+					else dp[i][j] = false;
+				}
+				else{
+					if(s[i]==s[j] && dp[i+1][j-1] == true)
+						dp[i][j] = true;
+					else
+						dp[i][j] = false;
+				}
+
+				if(dp[i][j] && gap > mx){
+					mx = gap;
+					ans = {i, j};
+				}
+			}
+		}
+
+		string lps;
+		lps = s.substr(ans.first, ans.second - ans.first + 1);
+		return lps;
+    }
+```
+
+
+
+
+
+
+
+### Longest repeating subsequence
+modified LCS
+
+write strings twice
+if last character is same and they are not at same index then they will surely be includede in answer
+else normal LCS
+
+```c++
+	int LongestRepeatingSubsequence(string s){
+		int n = s.size();
+		int dp[n+1][n+1];
+
+		for(int i=0; i<=n; ++i)
+			for(int j=0; j<=n; ++j)
+				if(i==0 || j==0)
+					dp[i][j] = 0;
+
+		for(int i=1; i<=n; ++i){
+			for(int j=1; j<=n; ++j){
+				if(s[i-1] == s[j-1] && i!=j)
+					dp[i][j] = 1 + dp[i-1][j-1];
+				else
+					dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+			}
+		}
+
+		return dp[n][n];
+	}
+```
+
+
+
+### Edit distance
+[https://www.youtube.com/watch?v=MiqoA-yF-0M]
+
+- step 1 : if last characters match do nothing dp[i][j] = dp[i-1][j-1];
+- step 2 : if last characters do not match
+	(i) Replace : dp[i][j] = dp[i-1][j-1] just make both characters same in 1 move and call on smaller strings
+	(ii) delete : dp[i][j] = dp[i-1][j] delete last character from string s
+	(iii) insert : dp[i][j] = dp[i][j-1] insert char at end of a that matches t and then call for i and j-1
+
+		inserted x now call for i-1 and j-1 but i-1 is i in this case we are not increasing length
+		ex:  s = abcd x 
+			 t = ab x
+			
+	ans is min(..., ... ,...) + 1
+
+```c++
+    int editDistance(string s, string t) {
+		int n = s.size();
+		int m = t.size();
+
+		int dp[n+1][m+1];
+		dp[0][0] = 0;
+
+		for(int j=1; j<=m; ++j)
+			dp[0][j] = dp[0][j-1]+1;
+		for(int i=1; i<=n; ++i)
+			dp[i][0] = dp[i-1][0]+1;
+
+		for(int i=1; i<=n; ++i){
+			for(int j=1; j<=m; ++j){
+				if(s[i-1]==t[j-1]){
+					dp[i][j] = dp[i-1][j-1];
+				}
+				else{
+					dp[i][j] = 1 + min({dp[i-1][j-1], dp[i-1][j], dp[i][j-1]});
+				}
+			}
+		}
+
+		return dp[n][m];
+    }
+```
+
+
+
+
+***
+Many times in dp you look backwars
+ex : you can not choose an element a[i] and a[i+1] so think of it as 
+	if i choose a[i+1] then i can't choose a[i]
+
+
+
+
+
+
+
+
+
+
+
+# ==================== NOTES ================
+
+
 ***
 ## General rules
 - if such dp comes where we have to choose out of some but not consicutive we can create dp array such that
@@ -94,6 +291,28 @@
         "not possible"
 
 ```
+
+
+- Recursive
+```c++
+	bool isSubsetSum(int a[], int n, int sum){
+		if(sum == 0)
+			return true;
+		if(n == 0 && sum != 0)
+			return false;
+		
+		if(dp[n][sum])
+			return dp[n][sum];
+
+		if(sum-a[n-1] < 0) //if sum is less then ignore it
+			return dp[n][sum] = isSubsetSum(a, n-1, sum);
+		else
+			return dp[n][sum] = isSubsetSum(a, n-1, sum-a[n-1]) || isSubsetSum(a, n-1, sum);
+	}
+```
+
+
+
 
 #### 2. equal sum partition
 
@@ -219,6 +438,19 @@
 
     cout << diff;
 ```
+
+OR 
+	int ans = INT_MAX;
+	for(int j=sum/2; j>=0; --j){
+		if(dp[n][j] == true){
+			ans = min(ans, sum-2*j);
+		}
+	}
+
+	return ans;
+
+
+
 
 #### 5. no. of subset with given diff
 
@@ -353,7 +585,6 @@ When we include an item in our knapsack we again check if we can include it or n
 
 
 ```c++
-    int dp[n+1][S+1];
 
     // --> length
 
@@ -372,6 +603,22 @@ When we include an item in our knapsack we again check if we can include it or n
     //dp[1][i] = j/c[0] no. of coins req. to make sum j using 1st coin only.
     //we are doing this because we cannot take normal knapsack here.
 
+
+	int dp[n+1][x+1];
+
+	for(int j=0; j<=x; ++j)
+		dp[0][j] = inf;
+	for(int i=1; i<=n; ++i)
+		dp[i][0] = 0;
+
+	//special case for row 1
+	for(int j=1; j<=x; ++j){
+		if(j%c[0] == 0)
+			dp[1][j] = j/c[0];
+		else
+			dp[1][j] = inf;
+	}
+
     for(int i=2; i<=n; ++i){
         for(int j=1; j<=S; ++j){
             if(c[i-1] <= j)
@@ -384,12 +631,26 @@ When we include an item in our knapsack we again check if we can include it or n
 ```
 
 
+
+
+
+
+
+
+
+
+
+//=============================================================
+
+
 ***
 ## LCS
 
 
-### Longes common subsequence
 
+
+### Longes common subsequence
+[https://www.youtube.com/watch?v=hR3s9rGlMTU&list=PL_z_8CaSLPWekqhdCPmFohncHwz8TY2Go&index=21]
 - Given two strings of length n and m find longest common subsequence
 
 ```c++
@@ -417,6 +678,77 @@ When we include an item in our knapsack we again check if we can include it or n
 ```
 
 
+
+
+### Longest common substring (part of lcs)
+[https://www.youtube.com/watch?v=NvmJBCn4eQI]
+
+calculate max suffix of all prefix arrays
+	if last char. matches of 2 prefix then add 1 to ans and calcuate for i-1, j-1 part
+		ex : a = [abcd]e  b = [abxd]e
+		we have already calculated for brackets
+
+	if last char. does not matches then set ans = 0 bcx max len prefix = 0 is last char doesnot match
+
+```c++
+    int findLength(vector<int>& nums1, vector<int>& nums2) {
+        
+		//nums1 is in rows
+		//nums2 is in cols 
+		int n = nums1.size();
+		int m = nums2.size();
+
+		int dp[n+1][m+1];
+
+		for(int i=0; i<=n; ++i)
+			dp[i][0] = 0;
+		for(int j=0; j<=m; ++j)
+			dp[0][j] = 0;
+		
+		int ans = 0;
+		for(int i=1; i<=n; ++i){
+			for(int j=1; j<=m; ++j){
+				if(nums1[i-1]==nums2[j-1])
+					dp[i][j] = 1+dp[i-1][j-1];
+				else
+					dp[i][j] = 0;
+				
+				ans = max(ans, dp[i][j]);
+			}
+		}
+
+		return ans;
+
+    }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//=============================================================
+
 ***
 ## LIS (Longest Increasing Subsequence)
 
@@ -428,6 +760,9 @@ When we include an item in our knapsack we again check if we can include it or n
 - <= because we can increase if lis be increased if it is equal or less
     d[i] = max(d[i], d[j] + 1); is also possible
 
+
+[https://www.youtube.com/watch?v=odrfUCS9sQk]
+
 1. #### moving back (n^2)
 
 ```c++
@@ -435,33 +770,15 @@ When we include an item in our knapsack we again check if we can include it or n
     lis[0] = 1;    
   
     for (int i=1; i<n; i++) { 
-
         lis[i] = 1;     //initially LIS for each index is 1
-
         for (int j = 0; j < i; j++ )            // check from beg. whose lis we can increase
-            if ( arr[i] > arr[j] && lis[i] <= lis[j])  // if lis can be increased inc by 1
+            if ( arr[j] < arr[i] && lis[i] <= lis[j])  // if lis can be increased inc by 1
                 lis[i] = lis[j] + 1;  
-                //d[i] = max(d[i], d[j] + 1);
     } 
   
     // Return maximum value in lis[] 
     int ans = *max_element(all(lis)); 
 
-```
-
-1. #### moving forward (easy n^2)
-
-```c++
-    vector<int> lis(n, 1);
-  
-    for (int i=0; i<n; i++) { 
-        for (int j = i+1; j < i; j++ )            // check from beg. whose lis we can increase
-            if(a[j] > a[i] && lis[j] <= lis[i]){
-                lis[j] = lis[i]+1;
-            }
-    } 
-  
-    int ans = *max_element(all(lis)); 
 ```
 
 
@@ -471,9 +788,11 @@ When we include an item in our knapsack we again check if we can include it or n
     vector<int> ans;
 
     for(int i=0; i<n; ++i){
-        int p = lower_bound(all(ans), a[i])-ans.begin();        // find ans
+        int p = lower_bound(all(ans), a[i])-ans.begin();        // find a[i] in ans (next greater of a[i]) (if equal just replace)
+
+		if(p < ans.size()) 		// if element is smaller then update then next neighbour bcx it may increase sub. in future
             ans[p] = a[i];
-        else                    // else push in ans
+        else                    // if element is biggest then simply append in ans
             ans.push_back(a[i]);
     }
 

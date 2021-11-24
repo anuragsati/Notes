@@ -1,3 +1,983 @@
+### imp fact about palindromes
+	in a valid palindrome 
+		1. reverse of any prefix is equal to suffix
+		2. sandwitched part is palindrome itself
+
+	abcdedcba =  [abc] [ded] [cba]
+				 pref  sw.    suff
+
+
+
+
+
+### add strings
+
+```c++
+	string numAdd(string a, string b){
+		reverse(a.begin(), a.end());
+		reverse(b.begin(), b.end());
+
+		int carry = 0;
+		string ans; 
+
+		int i=0;
+
+		while(i<a.size() && i<b.size()){
+			int ta = (a[i]-'0') + (b[i]-'0') + carry;
+			ans.push_back(ta%10 + '0');
+			carry = ta/10;
+			++i;
+		}
+
+		while(i<a.size()){
+			int ta = (a[i]-'0') + carry;
+			ans.push_back(ta%10 + '0');
+			carry = ta/10;
+			++i;
+		}
+
+		while(i<b.size()){
+			int ta = (b[i]-'0') + carry;
+			ans.push_back(ta%10 + '0');
+			carry = ta/10;
+			++i;
+		}
+
+		if(carry)
+			ans.push_back(carry + '0');
+
+		reverse(ans.begin(), ans.end());
+		return ans;
+	}
+```
+
+### to create int array
+	int* ans = new int[2];
+
+
+
+
+### If in 3 elements we want to find which one was minimum
+		int mn = min({a[i], b[j], c[k]});
+
+		if(a[i]==mn)
+			++i;
+		else if(b[j]==mn)
+			++j;
+		else
+			++k;
+
+
+
+
+### small optimization you can do in interviews is you can break early if you find optimal ans.
+
+
+
+
+### kth smalles or kth biggest is binary search
+
+
+
+
+### when we need to maximize average we can increase num. and decrease denominator
+
+
+
+
+
+### In case of multiple value equation and you want to verify it we can divide it to LHS and RHS
+[https://www.spoj.com/problems/ABCDEF/]
+
+	ex: 
+		if we have unbalanced equation with more variables on lhs than rhs then 
+		balance the equation so that lhs and rhs have almost same variable
+
+			(a*b + c) / d - e   = 	f
+			can be written as
+			a*b + c = d*(e+f) 	with 3 variables on each side
+
+		then we genereate all possible values of lhs and store them in map O(n^3)
+		then we generate all values of rhs and check how many values of rhs mathches lhs O(n^3)
+
+		so we reduced n^6 to n^3 by dividing equation in lhs and rhs
+
+
+	we can also use binary search to find freq. of elelemts using sorting (n^3 logn)
+
+
+
+
+
+### we can do b.search / lower/ upper bound on vector of pairs like this
+
+```c++
+	upper_bound(a.begin(), a.end(), pair<int, int> {x, y});
+```
+
+
+
+
+### binary search ke baad 2 pointer aata hai (how we can capitalize on b.search is 2 pointer)
+
+	binary search O(nlogn)
+	2 pointer O(n)
+
+
+### In case of pairs / coordinates we use sorting (optimization problem)
+
+example like this : 
+	5 100
+	0 7
+	11 32
+	99 10
+	46 8
+	87 54
+
+
+
+
+
+### to find the node visited for first time we can use int array
+	and every time node get vis we do vis++
+	then if vis == 1 then it is first time
+
+
+
+### To memoize array we encode them in string
+### to momoize bool array we can convert it into bitmasks i.e in binary
+
+
+
+### Boore moore voting
+	we try to vote ourself and if some other comes we try to cancel their votes.
+
+	i.e everyone tries to cancel each others vote
+
+	some president will be remaining if we find majority
+
+
+
+### mostly in stream/running questions max/min heap is the idea
+
+
+
+### If you want to maintain sorted order you can do 
+	maintain sorted vector and every time you add somethind add it like insert procedure from insertion sort
+
+
+
+
+
+### comparator for priority queue
+
+- first argument : parent
+- second argument : child
+
+- Return true if you want to swap i.e move child upwards 
+	return false if you dont want to swap
+
+
+we will need to create custom struct simple function will not work
+
+
+```c++
+	struct comp{
+    	bool operator() (Node* a, Node* b){
+    		return a->freq > b->freq; //return true when parent is greater than child means swap if parent > child
+    	}
+	};
+```
+
+
+
+### sort vs stable_sort
+
+sort() function usually uses Introsort. Therefore, sort() may preserve the physical order of semantically equivalent values but can’t be guaranteed. 
+
+stable_sort() function usually uses mergesort. Therefore, stable_sort() preserve the physical order of semantically equivalent values and its guaranteed.
+
+
+
+
+
+### don't compare a/b and c/d, compare ad and bc.
+
+
+
+
+### if not found lower bound will point to next greater element
+
+ex : [1, 2,  4, 5, 6, 7]
+	lb(7) = last index
+	lb(8) = m.end()
+	lb(3) = 4 
+
+	so always check after lower bound that whether key is present and if it is present it is the right key
+
+if(p!=m.end() && *p == val) [imp]
+
+
+
+
+
+
+### Upper bound of largest element < x
+
+if p == s.begin then element not found i.e all elements are smaller
+
+```c++
+	p = s.upper_bound(x);
+	if(p != s.begin()){
+		...
+	}
+```
+
+
+
+
+
+### Sorted array ----> [2pointer] or [binary_search]
+
+
+
+
+
+
+
+***
+### Lambda expressions C++
+[https://stackoverflow.com/questions/7627098/what-is-a-lambda-expression-in-c11]
+
+void func3(std::vector<int>& v) {
+  std::for_each(v.begin(), v.end(), [](int) { ... });
+}
+
+return type is automatically decided by compiler but you can also return custom values like this (-> xxx)
+
+void func3(std::vector<int>& v) {
+  std::for_each(v.begin(), v.end(), [](int) -> returntype { ... });
+}
+
+
+you can also capture variables by reference or any way you like
+
+[&epsilon] captures by reference
+[&] captures all variables used in the lambda by reference
+[=] captures all variables used in the lambda by value
+[&, epsilon] captures variables like with [&], but epsilon by value
+[=, &epsilon] captures variables like with [=], but epsilon by reference
+
+
+
+
+[IMPORTANT]
+You cannot pass variable in comparator function but if it is a lambda expression you can do it
+
+In C++0x you can use lambda expressions.
+
+```c++
+	auto comp = [&](int m,int n)-> bool {
+        return m<n; //or use paramA in some way
+    };
+```
+
+
+
+
+
+
+
+***
+### Bit magic
+to set a bit : create mask (1 << n) and OR it 
+to clear a bit : create mask (1 << n) and negate it ~(1 << n) then & it 
+bcz & with 0 = 0 and or with 1 = 1
+
+
+
+
+
+***
+### Create New Node (OOP)
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+TreeNode* newNode = new TreeNode(val);
+```
+
+
+
+***
+### Process subsets of size k
+
+```c++
+for (int b = 0; b < (1<<n); b++) {
+    if (__builtin_popcount(b) == k) {
+       // process subset b
+	} 
+}
+```
+
+
+
+
+***
+### Kadane's algo [https://www.youtube.com/watch?v=VMtyGnNcdPw]
+
+if we can include this element in curr sum i.e ele + curr sum > 0 then we include it
+else we exclude it and set subarray to 0
+
+[1 indexed]
+l = left bound of max subarray 
+r = right bound
+
+```c++
+	int csum = 0, osum = 0, l=0;
+	for(int i=0; i<n; ++i){
+		if(csum + a[i] < 0){ //exclude and set subarray to 0 bcx this element is negative(guaranteed)
+			csum = 0;
+			l = i+1;//start subarray from next i+1 index
+		}
+		else{ //include in running sum
+			csum += a[i];
+		}
+
+		if(csum > osum){
+			osum = csum;
+			ans = {l+1, i+1};
+		}
+	}
+```
+
+
+***
+### Next Permutation
+a decreasing sequence is always last permutation so we need to reverse it
+once we find an index which is not decreasing we need to find the next greater index from [idx, N] and swap it with that
+now reverse [idx, n] bcx it is decreasing
+
+[https://www.youtube.com/watch?v=quAS1iydq7U]
+
+
+```c++
+void nextPermutation(vector<int>& a) {
+	int n = a.size();
+	int idx = -1;
+	for(int i=n-1; i>0; --i){
+		if(a[i] > a[i-1]){
+			idx = i;
+			break;
+		}
+	}
+
+	if(idx == -1){
+		reverse(a.begin(), a.end());
+		return;
+	}
+
+	int prevdx = idx-1;
+	for(int i=n-1; i>=idx; --i){
+		if(a[i] > a[prevdx]){
+			swap(a[i], a[prevdx]);
+			break;
+		}
+	}
+
+	reverse(a.begin()+idx, a.end());
+	return;
+}
+```
+
+
+
+
+***
+### check parity of both numbers
+	if(a%2 == b%2){
+		same parity
+	}
+
+
+
+***
+### Number of pairs to form ex: aa , ab .. can be solved using dp
+	at this index what i can append
+
+
+
+***
+### How to calculate MEX (Minimum excluded) in array
+	O(N)
+
+	go through the array and remove elements from it that are greater than N
+	we use sorting for O (N) + unique O(N)
+	we go through the sequence in the line and look at the first one that does not correspond to the number in the array
+
+
+
+***
+### We can find Nth fibonacchi number in logN time as well
+
+
+
+***
+### lower_bound vs Upper_bound
+	lower_bound = next element >= the element provided
+	upper_bound = next element > the element provided
+
+	index 0 1 2 3 4 5 6 7 8
+	value a a a b b b c c c
+	bound       l     u
+
+Where l represents the lower bound of b, and u represents the upper bound of b.
+
+So if there are range of values that are "equal" with respect to the comparison being used, lower_bound gives you the first of this, upper_bound gives you one-past-the-end of these. This is the normal pattern of STL ranges [first, last).
+
+
+
+
+***
+### DSU  (kashish mandiratta)
+DSU with union by size / rank, but without path compression works in O(logn) time per query.
+with both optimizations : amortized O(1) 
+we attach the tree with the lower rank to the one with the bigger rank.
+
+void make_set(int v) {
+    parent[v] = v;
+    size[v] = 1;
+}
+
+void union_sets(int a, int b) { //union by size
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b) {
+        if (size[a] < size[b])
+            swap(a, b);
+        parent[b] = a;
+        size[a] += size[b];
+    }
+}
+
+int find_set(int v) { //path compression
+    if (v == parent[v])
+        return v;
+    return parent[v] = find_set(parent[v]);
+}
+
+
+
+***
+### we cannot use unordered_map<pair<int, int>> because they have primitive key value so to do this we will have to rewrite key values
+
+
+
+***
+### Instead of storing double in a map as a key use gcd to get numerator & denominator and store that as a pair in maps
+	ex : DONT DO THIS unordered_map<double, int>
+
+	do this a = xx, b = yy
+	gcd = gcd(a, b)
+	a = a / gcd
+	b = b / gcd
+
+	now a is numerator (reduced) ans b is denominator(reduced)
+
+	map<pair<int, int>, int>;
+
+
+	sign issues can be there
+	ex : -3/5 and 5/-3 are different but same so we will have to convert every thing such that only numerator has the sign
+
+		if((dx < 0 && dy < 0) || dy < 0)
+		dx *= -1, dy *= -1;
+
+
+
+
+
+	
+***
+### how to find leftmost and rightmost index of a subsequence 
+
+	ex :a = abcdefghffi
+		b = ffi
+
+		so first index of subsequnce ffi in a is 5 and last possible index is 8
+
+		leftmost give leftmost possible index of string t in s
+		rightmost gives righhtmost possible index of string t in s
+	
+```c++
+	vector<int> leftmost(m), rightmost(m);
+	for(int i=0, j=0; i<n; ++i){
+		if(s[i]==t[j]){
+			leftmost[j] = i;
+			++j;
+		}
+	}
+	for(int i=n-1, j=m-1; i>=0; --i){
+		if(s[i]==t[j]){
+			rightmost[j] = i;
+			--j;
+		}
+	}
+```
+
+***
+### Total ways to form a+b = n is (n+1)
+	ex : n=8
+
+	0 8
+	1 7
+	2 6
+	...
+	...
+	8 0
+
+
+
+***
+### Total windows of size K = (n-k+1);
+
+
+
+***
+### property of major/minor diagonal(https://leetcode.com/problems/grid-illumination/)
+	if an element is set how to find its mirst major diagonal 
+
+	major : (r-c)
+	minor : (r+c)
+
+	row[r]++;
+	col[c]++;
+	major[r-c]++;
+	minor[r+c]++;
+
+
+***
+### problem with std:set and lower_bound
+
+The problem is that upper_bound and lower_bound require random-access iterators. Only in that case they work in O(logN). If iterators are not random-access (like in std::set) these functions work in O(N) time. 
+- always use s.lower_bound(x) instead of lower_bound(..)
+
+
+
+***
+### check for valid permutation using cyclic swapping
+	for(int i=0; i<n; ++i){
+		if(a[i] >= n)
+			return false;
+	}
+
+	for(int i=0; i<n; ++i){
+		while(a[i]!=i)
+			swap(a[i], a[a[i]]);
+	}
+
+	for(int i=0; i<n; ++i){
+		if(a[i]!=i)
+			return false;
+	}
+
+
+
+***
+### First missing smallest + number
+	[https://www.youtube.com/watch?v=-lfHWWMmXXM&t=285s]
+
+- If array has +ve elements
+	move throught the array and if at index you find 3 then go to index 3 and mark it visited by putting (-)sign there
+	then after this process check if any number which is not -ve ex. if index 2 has +ve number means that 2 is missing because
+	it did not got marked by anyone
+
+- If array has -ve elements too then do it by cyclic swapping
+
+
+
+
+***
+### std::lower_bound
+
+	Input: 10 20 30 40 50
+	Output: lower_bound for element 30 at index 2
+
+	Input: 10 20 30 40 50
+	Output: lower_bound for element 35 at index 3
+
+	Input: 10 20 30 40 50
+	Output: lower_bound for element 55 at index 5
+
+	Input: 10 20 30 30 30 40 50
+	Output: lower_bound for element 30 at index 2
+
+
+
+***
+### Solve inqualities/limit questions like this
+	const int inf = (int)1e9;
+	int UL=inf, LL=-inf;
+
+	by keeping lower limit and upper limit in variables
+
+
+
+***
+### calculate binomial coefficients nCr % p
+
+- case 1 : (p > n) we use normal inverse method ex: p=1e9+7 and n=1e6
+	this is a universal method
+
+	[https://www.youtube.com/watch?v=Lxpr5OpeNa8]
+
+		first we know nCk = n! / k! * (n-k)!
+		on taking mod nCk%p = n!%p / k!%p * (n-k)!%p
+		
+		so first we precalculate n!%p
+
+		now in modulo division operator doesnot work so  instead of dividing we first take inverse and then multiply
+		so nCk%p  = n!%p * inv(k!) * inv((n-k)!);
+
+		using fermat's little theorem we can calculate mod inverse of x mod p by power(x, p-2);
+		so we use fast power (binpower) here
+
+		hence nCk = n!%p * binpow(k!, p-2) * binpow((n-k)!, p-2);
+
+		just multiply by 1LL because it can overflow
+
+```c++
+const int MOD = 1e9+7;
+const int MAXN = 100000; //max number of N
+vector<ll> F(MAXN);
+
+ll binpow(ll a, ll b) {
+	// a %= m; //optional if a>m
+
+	ll res = 1;
+	while (b > 0) {
+		if (b & 1)
+			res = (res * 1LL * a) % MOD;
+
+		a = (a * 1LL * a) % MOD;
+		b >>= 1;
+	}
+	return res;
+}
+
+ll C(ll n, ll k){
+	if(k > n)
+		return 0;
+	
+	ll res = F[n];
+	res = (res * 1LL * binpow(F[k], MOD-2)) % MOD; //inverse of k!
+	res = (res * 1LL * binpow(F[n-k], MOD-2)) % MOD //inverse of (n-k)!
+
+	return res;
+}
+
+int main(){
+	//precalculate factorials from [0..MAXN]
+	F[0] = F[1] = 1;
+	for(int i=2; i<=MAXN; ++i)
+		F[i] = (i * 1LL * F[i-1]) % MOD;
+}
+```
+
+
+- case 2 : (p < n) we use luca's theorem
+
+
+
+
+
+
+***
+### IMP property of gcd
+	always look at abs difference
+
+
+	gcd(x, y) == gcd(x-y, y) == gcd(x, y-x)   (whichever is greater we take abs diff);
+
+	same works for multiple numbers (taking abs value as diff)
+	gcd(x, y, z, ... n) === gcd(x, y-x, z-x, ..... n-x)
+						=== gcd(x-y, y, z-y, ..... n-y) 
+							...
+
+	i.e we pick one number and take its difference with all other numbers except itself  and then take gcd
+
+
+
+
+***
+### Longest increasing subarray with deleting one element
+	first make inc and decreasing array
+	incfrom[i] = max size increasing subarray ending at i
+	inctill[i] = max size increasing subarray starting at i
+
+```c++
+	vector<int> inctill(n, 1), incfrom(n, 1);
+ 
+	int ans = 0;
+ 
+	//for inc from 
+	for(int i=1; i<n; ++i){
+		if(a[i]>a[i-1])
+			incfrom[i] = incfrom[i-1]+1;
+		ans = max(ans, incfrom[i]);
+	}
+ 
+	//for inc till 
+	for(int i=n-2; i>=0; --i){
+		if(a[i]<a[i+1])
+			inctill[i] = inctill[i+1]+1;
+		ans = max(ans, inctill[i]);
+	}
+ 
+	for(int i=0; i<n; ++i){
+		int tans = 0;
+		if(i==0)
+			tans = inctill[i+1];
+		else if(i==n-1)
+			tans = incfrom[i-1];
+		else
+			if(a[i-1] < a[i+1]) //on deleting if we can attach both halves
+				tans = incfrom[i-1]+inctill[i+1];
+ 
+		ans = max(ans, tans);
+	}
+
+	cout << ans << endl;
+```
+
+
+***
+### Longest increasing subarray/substring 
+	maintain a prefix array initialize it to 1
+	whenever we see increaing a[i] > a[i-1] we increment otherwise it remains same
+
+	incfrom[i] = max size increasing subarray ending at i
+	inctill[i] = max size increasing subarray starting at i
+
+	liss = max element in that array
+
+```c++
+	vector<int> inctill(n, 1), incfrom(n, 1);
+
+	//for inc from 
+	for(int i=1; i<n; ++i){
+		if(a[i]>a[i-1])
+			incfrom[i] = incfrom[i-1]+1;
+	}
+ 
+	//for inc till 
+	for(int i=n-2; i>=0; --i){
+		if(a[i]<a[i+1])
+			inctill[i] = inctill[i+1]+1;
+	}
+```
+
+
+***
+### how to find local maxima and local minima in a mountain array
+	either both conditions true => means array is increasing
+	either both false => meanse array is decrasing
+
+	we dont want that => we want a point which is greater than both its neighbours or smaller than both neighbours
+
+```c++
+	for(int i=0; i<n; ++i){
+		if(i==0 || i==n-1 || (a[i-1] < a[i]) != (a[i] < a[i+1]))   //always including first and last index : alag alag hone chahiye dono
+			ans.push_back(a[i]);
+	}
+```
+
+
+***
+### How to take mod of negative number
+	let x be negative number
+
+	mod = ((x % MOD) + MOD) %MOD
+
+***
+### good subarrays (number of subarrays with sum = length) (https://codeforces.com/problemset/problem/1398/C)
+	subarray is good when sum == length or sum-length = 0;
+
+	imp : r-l+1 == sigmaLtoR(1) i.e total length = sumation of 1s from L to R
+
+	good subarray : sum L to R(a[i]) = r-l+1
+					sigmaLtoR(a[i]) = r-l+1
+					sigmaLtoR(a[i]) - (r-l+1) = 0
+					sigmaLtoR(a[i]) - sigmaLtoR(1) = 0
+					sigmaLtoR(a[i]-1) = 0
+
+	subtract 1 from each element and
+	then we need to find out number of subarrays with sum = 0;
+
+
+
+
+
+***
+### First number that does not divide n
+	total numbers divisible by 1, 2, 3, ... x in [1-N] are N/lcm(1..x)
+	total numbers divisible by 1, 2, 3, ... x-1 but not x  in [1-N] are N/lcm(1..x-1) - N/lcm(1..x)
+
+
+	let f(n) = x , x be the first non divisor of n
+	then
+		[1,2,3,4....x-1] is divides n i.e lcm(1,2,3....x-1) divides n
+		so total numbers that are between [1-n] that are divisible by lcm(1,2,...x-1) are n/lcm..
+	
+		we don't want the number x in this so
+		ans = lcm[1,2,3...x-1] - lcm[1,2,3...x];
+		i.e total numbers divisible by 1..x-1 - 1..x
+
+		ex : n = 12
+			total numbers divisible by non divisor = total numbers divisible by 1,2,3,4 - total num divisible by 1,2,3,4,5
+
+
+	
+
+
+
+***
+### subarray divide into k parts 
+
+	1	2	3	4	5
+diff  1 . 1 . 1 . 1
+
+sometimes you need to calculate diff between elements to divide subarray into k parts
+
+
+
+***
+### Bit tricks
+- a+b = a|b + a&b
+Suppose we have two binary numbers 1010 and 0101, there is no chance of any carry in binary addition.In that case we can write :
+
+	a+b =a|b
+
+But when we have carry, suppose we have : 1101(a) and 0101(b) then a & b works as the carry which we add further and the equation turns into :
+
+	a+b=a|b + a&b
+
+
+- Now I will talk about the sum-xor property :
+
+	a+b=a⊕b+2(a&b)
+
+Well where does it come from?
+It comes from the first equation that I described.But now let's break a & b here and bring xor into action:
+We can express a | b as a⊕b + a&b which brings the equation :
+
+	a+b=a⊕b+2(a&b)
+
+
+- Now the last one : It is a special one for me because I derived it with my own hands, that is :
+
+	a-b=a-(a&b)-x
+
+Now what is x?
+x is a number which I created by turning the bits on in positions where a has bit 0 and b has bit 1
+Now how did I get this equation?Here is how :
+Imagine two binary numbers : a : 11010 b : 01110
+we can write b as : 01010(a &b) + 00100(x) which leads us to the equation :
+	a-b=a-(a&b)-x
+
+UPD : x is basically (bitwise not of a) & b
+
+
+***
+### Max limit that all elements of subarray can reach
+
+	ex a = [1, 3, 5, 2, 8] we want to make all array elements equal
+	then
+
+```c++
+	c = ceil(sum / n); 		//this is what every number should be (saara sum n numbers mai divide krna hai)
+
+	if(c < max element)  	//incase c is smaller than max element then all elements should become max element
+		c = max element
+```
+
+
+
+***
+### We can count subarrays like (https://codeforces.com/contest/1263/problem/C)
+	[1, 2, 4, 5, 7, 8]
+	1 + 2 + 3 + 4 + 5  = 15
+
+	a: "a" (count: 1)
+	b: "b", "ab" (count: 2)
+	c: "c", "bc", "abc" (count: 3)
+	d: "d", "cd", "bcd", "abcd" (count: 4)
+
+	so start from subarray 1 and add it then move to subarray 2 then add 2 to ans and so on
+	maintain a last bad index till where we can include say x
+	so if we are at index i we can only add (i-x) to subarray bcz we can only go from i to x 
+
+	1 2 3 4 5 6 7 8 9
+		x 		i
+
+	ans = 1 + 2 + 3 + (4-3) + (5-3) + (6-3) + (7-3) ...
+	total subarrays
+
+
+
+
+***
+### pattern https://codeforces.com/problemset/problem/1263/C
+
+	1 2 3 4 5 6 7 8 ... 11 12
+   11 5 3 2 2 1 1 1		1   0
+
+   to jump to next index from 1 to 2 to 3 to 4 to 6 to 12 where digits are not repeating
+   i = n / (n/i) + 1
+
+	for ex 11/1(from bottom) = 11 +1 = 12
+
+
+***
+### Non negative = either + or 0
+
+
+***
+### Prefix sum trick
+	to count how many times all numbers after an index changes make index++
+	and count prefix sums
+	given in cp handbook
+
+
+***
+### Sqrt(n) function is log(n) in time complexity
+
+
+***
+### In constructive problems
+	always do casework : if number is odd if number is even
+	what it ends with etc etc
+
+
+***
+### string.substr
+	s.substr(0, x) start from 0 and go till x but don't include it [0, x) 
+
+***
+### string:find
+	string.find("xyz") returns index of first found character 
+	if not found it is equat to string::npos()
+
 ***
 ### std::erase(iterator + x) to delete from vector or string in O(N) time
 
@@ -90,6 +1070,8 @@ here we move from bit to bit and we check how much a single bit is contributing
 
 ***
 ### unique 
+	working : maintain a position where element needed to be swapped if element == prev element then continue else put it at pos and increase pos
+
 	removes adjacent duplicate elements
 	return pointer to first non replaced element then we need to resize array according to that
 	1 1 1 1 2 2 3 4 2 2
@@ -514,7 +1496,7 @@ Let cnt0(i) be the number of zeroes and cnt1(i) — the number of ones on prefix
 
 
 
-### Find max. set Bit
+### Find total bits in a number
 ```c++
     int k = (int)(log2(n) + 1);  // +1 because it will give exact bit position of set bit 
     // ex - in 18, without 1 will give 3 but with 1 will give 4 which is position of set bit
@@ -778,21 +1760,16 @@ If number has no divisors till now insert it into ans and mark all its multiple 
     vector<bool> mark(imax, true);
 
     void sieve(int &n){
-        vector<int> ans;
         mark[0]=false;
         mark[1]=false;
 
         for(int i=2; i*i<=imax; ++i){             //this is O(root n)
             if(mark[i]){
-                ans.push_back(i);
                 for(int j=i*i; j<=imax; j+=i){          //i+i for next
                     mark[j] = false;
                 }
             }
         }
-
-        for(int i=0; i<n; ++i)
-            cout << ans[i] << " ";
     }
 
     int main(){
@@ -1146,20 +2123,10 @@ so if they have diff parity ans will be 1
 
     
 ***
-### To find modulus of negative number
-
-Modulus of negative number is not defined in this shit c++
-
-    (M+M+.....M + x)%M
-
-or find next largest int and %M
-
-
-
-*** 
 
 
 ### Number of numbers divisible between a and b by x
+	this is similar to prefix sum in a range
 
 ```c++
     f(n){
@@ -1237,7 +2204,7 @@ we want a as multiple of b
         
 ***
 
-### Segmented sieve
+### segmented sieve
 
 ```c++
     void segSieve(ll a, ll b){
@@ -1259,7 +2226,7 @@ we want a as multiple of b
         for(auto i:primes){
 			ll firstMultiple = ceil(a*1.0 / i);   //get the first multiple of prime i closest to a
 
-			for(int j = max(i*i, firstMultiple*i); j<=b; j+=i){
+			for(int j = max(i*i, firstMultiple*i); j<=b; j+=i){ 		//max(...) for optimization only
 				isprime[j-a] = false;
 			}
         }
