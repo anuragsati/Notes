@@ -149,12 +149,14 @@ example like this :
 
 
 
-### Boore moore voting
+### Boyre moore voting
+[https://leetcode.com/problems/majority-element/submissions/]
 	we try to vote ourself and if some other comes we try to cancel their votes.
-
 	i.e everyone tries to cancel each others vote
-
 	some president will be remaining if we find majority
+
+    if maj_element occurs we increase cnt else we decrease
+    if cnt of an element becomes 0 then we set current element as maj_element and set cnt = 1
 
 
 
@@ -333,33 +335,7 @@ for (int b = 0; b < (1<<n); b++) {
 
 
 
-***
-### Kadane's algo [https://www.youtube.com/watch?v=VMtyGnNcdPw]
 
-if we can include this element in curr sum i.e ele + curr sum > 0 then we include it
-else we exclude it and set subarray to 0
-
-[1 indexed]
-l = left bound of max subarray 
-r = right bound
-
-```c++
-	int csum = 0, osum = 0, l=0;
-	for(int i=0; i<n; ++i){
-		if(csum + a[i] < 0){ //exclude and set subarray to 0 bcx this element is negative(guaranteed)
-			csum = 0;
-			l = i+1;//start subarray from next i+1 index
-		}
-		else{ //include in running sum
-			csum += a[i];
-		}
-
-		if(csum > osum){
-			osum = csum;
-			ans = {l+1, i+1};
-		}
-	}
-```
 
 
 ***
