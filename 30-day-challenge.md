@@ -31,11 +31,6 @@
 
 	- The give away to a heap/priority queue question is whenever a question asks for k closest or k smallest or k largest.
 
-	- for min k values I should use max heap(priority queue) and max k values min heap
-	
-	- to find min k elelmets use max heap and maintain the size of max heap till k
-		now if smaller elements comes we can easily remove topmost element from maxheap and then insert that element
-		that's why we use maxheap in min k problems.
 	
 	- default priority queue = Max heap type
 	- priority_queue <..., ... , greater<int>> = Min heap

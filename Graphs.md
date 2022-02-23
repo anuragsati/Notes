@@ -3,6 +3,17 @@
 T.C : O(v + e)
 S.C : O(v)
 
+
+- Compute in-degree for each of the vertex 
+- Pick all the vertices with in-degree as 0 and add them into a queue 
+- Remove a vertex from the queue (Dequeue operation) and then. 
+    - Increment count of visited nodes by 1.
+    - Decrease in-degree by 1 for all its neighbouring nodes.
+    - If in-degree of a neighbouring nodes is reduced to zero, then add it to the queue.
+
+- If count of visited nodes is not equal to the number of nodes in the graph 
+    then the topological sort is not possible for the given graph.
+
 ```c++
 	vector<int> adj[n+1];
 	vector<int> ind(n+1);
@@ -22,18 +33,28 @@ S.C : O(v)
 	vector<int> toporder;
 
 	while(!q.empty()){
-		int u = q.front();
+		int node = q.front();
 		q.pop();
+        toporder.push_back(node);
 
-		for(auto x : adj[u]){ //if we are visiting this node then reduce indegree of every child by 1
+		for(auto x : adj[node]){    //if we are visiting this node then reduce indegree of every child by 1
 			ind[x]--;
 
-			if(ind[x] == 0) //if at some point indegree becomes 0 that means now we can process it so push in queue
+			if(ind[x] == 0)     //if at some point indegree becomes 0 that means now we can process it so push in queue
 				q.push(x);
 		}
 	}
 
+
+    if(topsort.size() == n)
+        return topsort;
+    else
+        // topsort not possible
+
 ```
+
+
+
 
 ***
 ### Parallel BFS
@@ -164,80 +185,6 @@ void dfs(ll i, ll sum){
 			dfs(i);
 ```
 
-
-***
-## Dijkstra (complete with std::set)
-
-```c++
-    #include <bits/stdc++.h>
-    using namespace std;
-
-    #define ll long long
-    #define ull unsigned long long 
-    #define endl '\n'
-    #define pii pair<int, int>
-    #define all(a) a.begin(),a.end()
-
-    template <typename T>
-    inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }
-
-    const int sz = 200000;
-    const ll inf = 1e17;
-    vector<pair<ll, ll> > a[sz];        // node -> (node, dist), ...
-    vector<ll> dist(sz, inf);           // (distance of node)
-    vector<ll> par(sz, -1);             //parent array to print path
-    ll n, m;
-
-    void dijkstra(int src){
-        dist[src] = 0;              //source distance will always be zero
-        par[src] = -1;              //parent of source is -1
-        set<pair<ll, ll> > s;                 // (distance , node)
-        s.insert({dist[src], src});
-
-        while(!s.empty()){
-            ll node = (s.begin()) -> second;        //get the active node in set
-            s.erase(s.begin());
-
-            for(auto x:a[node]){
-                if(x.second + dist[node] < dist[x.first]){          //if dist. of neibour is greather than the dist of parent + weight then reduce that dist.
-                    s.erase({dist[x.first], x.first});              // if that set exists exists update it
-                    dist[x.first] = x.second+dist[node];
-                    par[x.first] = node;                            // make node as parent of child
-                    s.insert({dist[x.first], x.first});
-                }
-            }
-        }
-
-    }
-
-    void printPath(ll j) { 
-        if (par[j] == - 1) {
-            cout << j << " ";
-            return; 
-        }
-        printPath(par[j]); 
-        cout << j << " ";
-    } 
-
-    int main(){
-        cin >> n >> m;
-        while(m--){
-            ll x, y, w;
-            cin >> x >> y >> w;
-            a[x].push_back({y, w});
-            a[y].push_back({x, w});
-        }
-
-        dijkstra(1);        // calling dijkstra from node 1
-
-        if(dist[n] != inf)      //reachable
-            printPath(n);
-        else                    //not reachable
-            cout << -1;
-        
-    }
-
-```
 
 
 ***
