@@ -1,3 +1,207 @@
+### K bad in an array (2 pointer pattern)
+
+maintain L and move i
+at each index check if we have k bad elements
+if we have remove with while loop
+
+- update map
+- while to reduce window
+- calculate ans
+
+```c++
+    int longestSubarray(vector<int>& a) {
+        int n = a.size();
+        int l = 0, cnt = 0, ans = 0;
+        for(int i=0; i<n; ++i){
+            if(a[i] == 0)
+                ++cnt;
+            
+            if(cnt >= 2){
+                while(a[l] != 0)
+                    ++l;
+                ++l;
+                --cnt;
+            }
+
+            ans = max(ans, i-l+1);
+        }
+        return ans-1;
+    }
+```
+
+
+
+
+### expression parsing  (only + - *)
+
+Evaluation of 2 + 3 * 4 + 3 * 3 * 2 string in one pass 
+
+idea :
+	we build our ans on the go we also maintain what we did 	previously in prev along with sign
+
+	for + we add cur value to ans and set this value to +prev
+		ans += a[I+1]
+		prev = +a[I+1]
+
+	for - we subtract and make prev as -prev of this value
+		ans += a[I+1]
+		prev = +a[I+1]
+
+	for * we do negate the effect of prev calculation that means
+	we are considering it for product
+	we update prev as this multiplication along with sign
+	
+	ans = ans - prev + prev * a[I+1]
+	prev = prev * a[I+1]
+
+
+```c++
+    ll evaluate(){
+        int n = exp.size();
+
+        ll ans = stoll(exp[0]), prev = stoll(exp[0]);
+        for(int i=1; i<n; i+=2){
+            if(exp[i] == ""+""){
+                ans += stoll(exp[i+1]);
+                prev = stoll(exp[i+1]);
+            }
+            else if(exp[i] == ""-""){
+                ans -= stoll(exp[i+1]);
+                prev = -1 * stoll(exp[i+1]);
+            }
+            else{
+                ans = ans - prev + prev * stoll(exp[i+1]);
+                prev = prev * stoll(exp[i+1]);
+            }
+        }
+        return ans;
+    }
+```
+
+
+
+
+
+### Partial max array (suffix max)
+    partial_sum(v.rbegin(), v.rend(), v.rbegin(), [](int a, int b) { return max(a, b); });
+
+
+
+### Z-Function [cp-algo]
+- max prefix matching starting from i....n
+
+```c++
+    vector<int> z_function(string s) {
+        int n = (int) s.length();
+        vector<int> z(n);
+        for (int i = 1, l = 0, r = 0; i < n; ++i) {
+            if (l<=i && i <= r)
+                z[i] = min (r - i + 1, z[i - l]);
+            while (i + z[i] < n && s[z[i]] == s[i + z[i]])
+                ++z[i];
+            if (i + z[i] - 1 > r)
+                l = i, r = i + z[i] - 1;
+        }
+        return z;
+    }
+```
+
+
+
+
+### modular multiplication (a*b)%m
+[https://www.codechef.com/problems/GCDMOD]
+when a*b overflows due to mod being large we can use this
+this works same as binpow but with +
+
+```c++
+    int modmul(int a, int b, int mod){
+        int ans = 0;
+        a %= mod;
+        while(b){
+            if(b&1)
+                ans = (ans + a)%mod;
+            a = (a + a)%mod;
+            b >>=1;
+        }
+        return ans;
+    }
+```
+
+
+
+
+
+
+### we can use sieve to precalculate number of divisors from [1, 1e6] [imp]
+T. C : n log n
+
+```c++
+    for(int i=1; i<=n; ++i)
+        for(int j=i; j<=n; j+=i)
+            div[j]++;
+```
+
+
+### Ternary search for minimum
+[https://codeforces.com/contest/1520/submission/115276622]
+since we want to move towards minimum
+- if d1 <= d2 we ignore everything above mid2
+- if d1 > d2 we ignore everything above mid1 
+
+```c++
+    int l=0, r=n-1;
+    int ans = 1e18;
+    while(l<=r){
+        int mid1 = l + (r-l) / 3;
+        int mid2 = r - (r-l) / 3;
+
+        int d1 = steps(mid1);
+        int d2 = steps(mid2);
+
+        ans = min({ans, d1, d2});
+        if(d1 <= d2)
+            r = mid2 - 1;
+        else
+            l = mid1 + 1;
+    }
+
+    cout << ans << endl;
+```
+
+
+
+
+
+# How to find mex in array
+[https://codeforces.com/problemset/problem/1628/A]
+- we can maintain globla variable which denote mex
+- we maintain a hashmap and each time check if mex is present or not
+- using this we can create suffix / prefix mex
+
+- T.C : O(n)
+
+```c++
+    unordered_map<int, bool> appeared;
+    int mex = 0;
+    for(int i=0; i<n; ++i){
+        appeared[a[i]] = true;
+
+        while(appeared.count(mex))
+            ++mex;
+    }
+```
+
+- to restart mex just set mex = 0 and appeared.clear()
+
+
+
+
+# multimap.erase() will delete all occurances 
+- better do multimap(m.lower_bound(key)) to erase one occurance if it exits
+
+
+
 ### imp fact about palindromes
 	in a valid palindrome 
 		1. reverse of any prefix is equal to suffix
@@ -610,7 +814,7 @@ The problem is that upper_bound and lower_bound require random-access iterators.
 
 
 ***
-### calculate binomial coefficients nCr % p
+### calculate binomial coefficients nCr % p [ncr]
 
 - case 1 : (p > n) we use normal inverse method ex: p=1e9+7 and n=1e6
 	this is a universal method
@@ -1728,6 +1932,10 @@ Used to find out how many solutions does this eqn `a+b+c = n` have
 This prints increasing numbers where each number is not divisor of all its previous numbers.
 This can be done with modified sieve.
 If number has no divisors till now insert it into ans and mark all its multiple false.
+
+if you want to generate primes till N  :  for(int i=2, i*i<N, ++i)
+then go through all unmarked to get all primes between 1 and N
+it is sufficient to check root n values to mark all primes between 1 and N
 
 
 ```c++

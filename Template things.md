@@ -1,0 +1,1 @@
+template <typename T> inline T gcd(T a, T b) { while (b != 0) swap(b, a %= b); return a; }

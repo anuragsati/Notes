@@ -1,4 +1,35 @@
 ***
+### Kruskal's algo (MST)
+[https://leetcode.com/problems/min-cost-to-connect-all-points/]
+
+- Sort all the edges in non-decreasing order of their weight.
+- Pick the smallest edge. Check if it forms a cycle with the spanning-tree formed so far. If the cycle is not formed, include this edge. Else, discard it.
+- Repeat step#2 until there are (V-1) edges in the spanning tree.
+
+we will stop once n-1 edges are included in mst 
+
+
+```c++
+    // a contains edges with [weight, from, to]
+
+    int E = a.size();
+    sort(a.begin(), a.end());
+
+    int ans = 0, used = 0;
+    for(int i=0; i<E && used < n-1; ++i){
+        auto p = a[i];
+        if(find_set(p[1]) != find_set(p[2])){
+            ++used;
+            ans += p[0];            //add this to ans
+            union_set(p[1], p[2]);
+        }
+    }
+```
+
+
+
+
+***
 ### Topological sorting (Kahn's algo)
 T.C : O(v + e)
 S.C : O(v)
